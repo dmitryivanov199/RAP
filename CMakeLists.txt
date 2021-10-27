@@ -3,4 +3,4 @@ project(RAP)
 
 set(CMAKE_CXX_STANDARD 14)
 
-add_executable(RAP main.cpp)
+add_executable(RAP main.cpp src/rap_packer/rap_packer.h src/rap_packer/rap_packer.cpp src/rap_unpacker/rap_unpacker.h src/rap_unpacker/rap_unpacker.cpp)
