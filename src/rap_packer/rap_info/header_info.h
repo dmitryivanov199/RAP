@@ -1,11 +1,13 @@
 #ifndef RAP_HEADER_INFO_H
 #define RAP_HEADER_INFO_H
 
+#include <array>
+
 #include "date.h"
 
 struct DescriptorInfo {
-    unsigned char rapId[8];
-    unsigned char rapVersion[4];
+    std::array<unsigned char, 8> rapId;
+    std::array<unsigned char, 4> rapVersion;
     Date rapDate;
     uint8_t producerId;
 };
@@ -21,7 +23,7 @@ struct StructureInfo {
 };
 
 struct RadioLibInfo {
-    unsigned char radioLibVersion[4];
+    std::array<unsigned char, 4> radioLibVersion;
     Date radioLibDate;
 };
 
