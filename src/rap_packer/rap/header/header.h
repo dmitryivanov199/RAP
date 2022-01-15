@@ -1,18 +1,18 @@
-#ifndef RAP_HEADER_INFO_H
-#define RAP_HEADER_INFO_H
+#ifndef RAP_HEADER_H
+#define RAP_HEADER_H
 
 #include <array>
 
-#include "date.h"
+#include "../date.h"
 
-struct DescriptorInfo {
+struct RapDescriptor {
     std::array<unsigned char, 8> rapId;
     std::array<unsigned char, 4> rapVersion;
     Date rapDate;
     uint8_t producerId;
 };
 
-struct StructureInfo {
+struct RapStructureDescriptor {
     uint8_t manufacturerInfoFlag: 1;
     uint8_t initialProfileFlag: 1;
     uint8_t rapReserveFlag: 1;
@@ -22,21 +22,21 @@ struct StructureInfo {
     uint8_t reserveFlags: 2;
 };
 
-struct RadioLibInfo {
+struct RadioLibDescriptor {
     std::array<unsigned char, 4> radioLibVersion;
     Date radioLibDate;
 };
 
-struct TargetPlatformInfo {
+struct TargetPlatformDescriptor {
     uint8_t targetPlatformId;
     uint8_t reconfigurationCode;
 };
 
-struct HeaderInfo {
-    DescriptorInfo descriptor;
-    StructureInfo structure;
-    RadioLibInfo radioLib;
-    TargetPlatformInfo targetPlatform;
+struct RapHeader {
+    RapDescriptor rapDescriptor;
+    RapStructureDescriptor rapStructureDescriptor;
+    RadioLibDescriptor radioLibDescriptor;
+    TargetPlatformDescriptor targetPlatformDescriptor;
 };
 
-#endif //RAP_HEADER_INFO_H
+#endif //RAP_HEADER_H
