@@ -14,7 +14,7 @@ public:
 
     ~RapPacker() = default;
 
-    bool formRap();
+    void formRap();
 
 private:
     void formHeader();
@@ -34,6 +34,8 @@ private:
     static void setRadioLibDescriptor(RapHeader &header);
 
     static void setTargetPlatformDescriptor(RapHeader &header);
+
+    void formUraCodeSection();
 };
 
 #endif //RAP_RAP_PACKER_H

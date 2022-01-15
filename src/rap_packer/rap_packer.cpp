@@ -2,9 +2,9 @@
 
 #include "rap_packer.h"
 
-bool RapPacker::formRap() {
+void RapPacker::formRap() {
     formHeader();
-    return false;
+    formUraCodeSection();
 }
 
 void RapPacker::formHeader() {
@@ -90,5 +90,9 @@ void RapPacker::setRadioLibDescriptor(RapHeader &header) {
 
 void RapPacker::setTargetPlatformDescriptor(RapHeader &header) {
     header.targetPlatformDescriptor.targetPlatformId = 45;
-    header.targetPlatformDescriptor.reconfigurationCode = 112;
+    header.targetPlatformDescriptor.reconfigurationCode = 5;
+}
+
+void RapPacker::formUraCodeSection() {
+
 }
