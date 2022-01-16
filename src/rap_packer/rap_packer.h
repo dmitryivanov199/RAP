@@ -41,9 +41,9 @@ private:
 
     void formUraCodeSection();
 
-    static void setUraDescriptor(UraDescriptor &descriptor);
+    static uint64_t calculateCodeSectionSize();
 
-    static void setPaddingBit(PaddingBit &bit, size_t currentComponentNumber, size_t componentsNumber);
+    static void setUraDescriptor(UraDescriptor &descriptor);
 
     static void setUraComponentHeader(UraComponentHeader &header);
 

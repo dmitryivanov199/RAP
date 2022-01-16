@@ -109,29 +109,32 @@ void RapPacker::setTargetPlatformDescriptor(RapHeader &header) {
 }
 
 void RapPacker::formUraCodeSection() {
-    size_t subsectionsNumber = 1;
+    uint64_t codeSectionSize = calculateCodeSectionSize();
+    rap.write((char *) &codeSectionSize, sizeof(codeSectionSize));
 
-    for (size_t i = 0; i < subsectionsNumber; i++) {
-        UraDescriptor uraDescriptor{};
-        setUraDescriptor(uraDescriptor);
-        rap.write((char *) &uraDescriptor, sizeof(uraDescriptor));
+    UraDescriptor uraDescriptor{};
+    setUraDescriptor(uraDescriptor);
+    rap.write((char *) &uraDescriptor, sizeof(uraDescriptor));
 
-        size_t componentsNumber = 1;
+    PaddingBit paddingBit{};
+    paddingBit.paddingBit = 0;
+    rap.write((char *) &paddingBit, sizeof(paddingBit));
 
-        for (size_t j = 0; j < componentsNumber; j++) {
-            PaddingBit paddingBit{};
-            setPaddingBit(paddingBit, j, componentsNumber);
-            rap.write((char *) &paddingBit, sizeof(paddingBit));
+    UraComponentHeader header{};
+    setUraComponentHeader(header);
+    rap.write((char *) &header, sizeof(header));
 
-            UraComponentHeader header{};
-            setUraComponentHeader(header);
-            rap.write((char *) &header, sizeof(header));
-
-            writeUraToRap();
-        }
-    }
+    writeUraToRap();
 
     rap.close();
+}
+
+uint64_t RapPacker::calculateCodeSectionSize() {
+    uint64_t codeSectionSize{sizeof(UraDescriptor) + sizeof(UraComponentHeader) + sizeof(PaddingBit)};
+    codeSectionSize += sizeof(uint64_t);
+    codeSectionSize += getUraSize();
+
+    return codeSectionSize;
 }
 
 void RapPacker::setUraDescriptor(UraDescriptor &descriptor) {
@@ -139,14 +142,6 @@ void RapPacker::setUraDescriptor(UraDescriptor &descriptor) {
     setVersion(descriptor.uraVersion, "1.0");
     setDate(descriptor.uraDate, 15, 1, 22);
     setProducerId(descriptor.uraProducerId, 1);
-}
-
-void RapPacker::setPaddingBit(PaddingBit &bit, size_t currentComponentNumber, size_t componentsNumber) {
-    if (currentComponentNumber == componentsNumber - 1) {
-        bit.paddingBit = 0;
-    } else {
-        bit.paddingBit = 1;
-    }
 }
 
 void RapPacker::setUraComponentHeader(UraComponentHeader &header) {
