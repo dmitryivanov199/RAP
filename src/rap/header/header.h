@@ -29,7 +29,7 @@ struct RadioLibDescriptor {
 
 struct TargetPlatformDescriptor {
     uint8_t targetPlatformId;
-    uint8_t reconfigurationCode;
+    uint8_t reconfigurationClass;
 };
 
 struct RapHeader {

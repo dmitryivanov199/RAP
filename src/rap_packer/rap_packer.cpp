@@ -9,11 +9,7 @@ void RapPacker::formRap() {
 
 void RapPacker::formHeader() {
     RapHeader header{};
-
-    setRapId(header);
-    setRapVersion(header);
-    setRapDate(header);
-    setProducerId(header);
+    setRapDescriptor(header);
 
     char fileName[20];
     getRapFileName(header.rapDescriptor.rapId, fileName);
@@ -24,32 +20,57 @@ void RapPacker::formHeader() {
     setTargetPlatformDescriptor(header);
 
     rap.write((char *) &header, sizeof(header));
-    rap.close();
-};
-
-void RapPacker::setRapId(RapHeader &header) {
-    header.rapDescriptor.rapId.at(0) = 'R';
-    header.rapDescriptor.rapId.at(1) = 'A';
-    header.rapDescriptor.rapId.at(2) = 'P';
-    header.rapDescriptor.rapId.at(3) = '1';
-    header.rapDescriptor.rapId.at(4) = '\0';
 }
 
-void RapPacker::setRapVersion(RapHeader &header) {
-    header.rapDescriptor.rapVersion.at(0) = '1';
-    header.rapDescriptor.rapVersion.at(1) = '.';
-    header.rapDescriptor.rapVersion.at(2) = '0';
-    header.rapDescriptor.rapVersion.at(3) = '\0';
+void RapPacker::setRapDescriptor(RapHeader &header) {
+    setId(header.rapDescriptor.rapId, "RAP1");
+    setVersion(header.rapDescriptor.rapVersion, "1.0");
+    setDate(header.rapDescriptor.rapDate, 15, 1, 22);
+    setProducerId(header.rapDescriptor.producerId, 126);
 }
 
-void RapPacker::setRapDate(RapHeader &header) {
-    header.rapDescriptor.rapDate.day = 15;
-    header.rapDescriptor.rapDate.month = 1;
-    header.rapDescriptor.rapDate.year = 22;
+bool RapPacker::setId(std::array<unsigned char, 8> &id, const char *setId) {
+    if (8 < strlen(setId) + 1) {
+        return false;
+    }
+
+    size_t i;
+
+    for (i = 0; *setId != '\0'; i++) {
+        id.at(i) = static_cast<unsigned char>(*setId);
+        setId++;
+    }
+
+    id.at(i) = '\0';
+
+    return true;
 }
 
-void RapPacker::setProducerId(RapHeader &header) {
-    header.rapDescriptor.producerId = 126;
+bool RapPacker::setVersion(std::array<unsigned char, 4> &version, const char *setVersion) {
+    if (4 < strlen(setVersion) + 1) {
+        return false;
+    }
+
+    size_t i;
+
+    for (i = 0; *setVersion != '\0'; i++) {
+        version.at(i) = static_cast<unsigned char>(*setVersion);
+        setVersion++;
+    }
+
+    version.at(i) = '\0';
+
+    return true;
+}
+
+void RapPacker::setDate(Date &date, uint8_t day, uint8_t month, uint8_t year) {
+    date.day = day;
+    date.month = month;
+    date.year = year;
+}
+
+void RapPacker::setProducerId(uint8_t &id, uint8_t setId) {
+    id = setId;
 }
 
 void RapPacker::getRapFileName(std::array<unsigned char, 8> rapId, char *fileName) {
@@ -59,7 +80,7 @@ void RapPacker::getRapFileName(std::array<unsigned char, 8> rapId, char *fileNam
     k += strlen("../rap/");
 
     for (size_t i = 0; rapId.at(i) != '\0'; i++) {
-        fileName[k] = rapId.at(i);
+        fileName[k] = static_cast<char>(rapId.at(i));
         k++;
     }
 
@@ -78,21 +99,36 @@ void RapPacker::setRapStructureDescriptor(RapHeader &header) {
 }
 
 void RapPacker::setRadioLibDescriptor(RapHeader &header) {
-    header.radioLibDescriptor.radioLibVersion.at(0) = '1';
-    header.radioLibDescriptor.radioLibVersion.at(1) = '.';
-    header.radioLibDescriptor.radioLibVersion.at(2) = '0';
-    header.radioLibDescriptor.radioLibVersion.at(3) = '\0';
-
-    header.radioLibDescriptor.radioLibDate.day = 15;
-    header.radioLibDescriptor.radioLibDate.month = 1;
-    header.radioLibDescriptor.radioLibDate.year = 22;
+    setVersion(header.radioLibDescriptor.radioLibVersion, "1.0");
+    setDate(header.radioLibDescriptor.radioLibDate, 15, 1, 22);
 }
 
 void RapPacker::setTargetPlatformDescriptor(RapHeader &header) {
     header.targetPlatformDescriptor.targetPlatformId = 45;
-    header.targetPlatformDescriptor.reconfigurationCode = 5;
+    header.targetPlatformDescriptor.reconfigurationClass = 1;
 }
 
 void RapPacker::formUraCodeSection() {
+    size_t subsectionsNumber = 1;
 
+    for (size_t i = 0; i < subsectionsNumber; i++) {
+        UraDescriptor uraDescriptor{};
+        setUraDescriptor(uraDescriptor);
+        rap.write((char *) &uraDescriptor, sizeof(uraDescriptor));
+
+        size_t componentsNumber = 1;
+
+        for (size_t j = 0; j < componentsNumber; j++) {
+
+        }
+    }
+
+    rap.close();
+}
+
+void RapPacker::setUraDescriptor(UraDescriptor &descriptor) {
+    setId(descriptor.uraId, "URA1");
+    setVersion(descriptor.uraVersion, "1.0");
+    setDate(descriptor.uraDate, 15, 1, 22);
+    setProducerId(descriptor.uraProducerId, 1);
 }

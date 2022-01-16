@@ -3,7 +3,8 @@
 
 #include <fstream>
 
-#include "rap/header/header.h"
+#include "../rap/header/header.h"
+#include "../rap/ura_code_section/ura_code_section.h"
 
 class RapPacker {
 private:
@@ -19,13 +20,15 @@ public:
 private:
     void formHeader();
 
-    static void setRapId(RapHeader &header);
+    static void setRapDescriptor(RapHeader &header);
 
-    static void setRapVersion(RapHeader &header);
+    static bool setId(std::array<unsigned char, 8> &id, const char *setId);
 
-    static void setRapDate(RapHeader &header);
+    static bool setVersion(std::array<unsigned char, 4> &version, const char *setVersion);
 
-    static void setProducerId(RapHeader &header);
+    static void setDate(Date &date, uint8_t day, uint8_t month, uint8_t year);
+
+    static void setProducerId(uint8_t &id, uint8_t setId);
 
     static void getRapFileName(std::array<unsigned char, 8> rapId, char *fileName);
 
@@ -36,6 +39,8 @@ private:
     static void setTargetPlatformDescriptor(RapHeader &header);
 
     void formUraCodeSection();
+
+    static void setUraDescriptor(UraDescriptor &descriptor);
 };
 
 #endif //RAP_RAP_PACKER_H
