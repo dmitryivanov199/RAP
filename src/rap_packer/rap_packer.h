@@ -9,7 +9,7 @@
 
 class RapPacker {
 private:
-    std::ofstream rap;
+    std::ofstream pack;
 
 public:
     RapPacker() = default;
@@ -21,7 +21,7 @@ public:
 private:
     void formHeader();
 
-    static void setRapDescriptor(RapHeader &header);
+    static void setRapDescriptor(RAPHeader &header);
 
     static bool setId(std::array<unsigned char, 8> &id, const char *setId);
 
@@ -33,19 +33,19 @@ private:
 
     static void getRapFileName(std::array<unsigned char, 8> rapId, char *fileName);
 
-    static void setRapStructureDescriptor(RapHeader &header);
+    static void setRapStructureDescriptor(RAPHeader &header);
 
-    static void setRadioLibDescriptor(RapHeader &header);
+    static void setRadioLibDescriptor(RAPHeader &header);
 
-    static void setTargetPlatformDescriptor(RapHeader &header);
+    static void setTargetPlatformDescriptor(RAPHeader &header);
 
     void formUraCodeSection();
 
     static uint64_t calculateCodeSectionSize();
 
-    static void setUraDescriptor(UraDescriptor &descriptor);
+    static void setUraDescriptor(URADescriptor &descriptor);
 
-    static void setUraComponentHeader(UraComponentHeader &header);
+    static void setUraComponentHeader(URAComponentHeader &header);
 
     void writeUraToRap();
 

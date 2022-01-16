@@ -6,17 +6,17 @@
 
 #include "../date.h"
 
-struct UraDescriptor {
-    std::array<unsigned char, 8> uraId;
-    std::array<unsigned char, 4> uraVersion;
-    Date uraDate;
-    uint8_t uraProducerId;
+struct URADescriptor {
+    std::array<unsigned char, 8> appID;
+    std::array<unsigned char, 4> appVersion;
+    Date appDate;
+    uint8_t appProducerID;
 };
 
-struct UraComponentHeader {
-    std::array<unsigned char, 8> uraComponentId;
-    uint8_t uraComponentCodeType;
-    uint8_t HwComponentId;
+struct URAComponentHeader {
+    std::array<unsigned char, 8> appComponentID;
+    uint8_t appComponentCodeType;
+    uint8_t HWComponentID;
 };
 
 #endif //RAP_URA_CODE_SECTION_H
