@@ -10,4 +10,5 @@ add_executable(RAP main.cpp
         src/rap_unpacker/rap_unpacker.cpp
         src/rap/header/header.h
         src/rap/date.h
-        src/rap/ura_code_section/ura_code_section.h src/rap/padding_bit.h)
+        src/rap/ura_code_section/ura_code_section.h
+        src/rap/padding_bit.h)
