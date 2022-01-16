@@ -119,7 +119,15 @@ void RapPacker::formUraCodeSection() {
         size_t componentsNumber = 1;
 
         for (size_t j = 0; j < componentsNumber; j++) {
+            PaddingBit paddingBit{};
+            setPaddingBit(paddingBit, j, componentsNumber);
+            rap.write((char *) &paddingBit, sizeof(paddingBit));
 
+            UraComponentHeader header{};
+            setUraComponentHeader(header);
+            rap.write((char *) &header, sizeof(header));
+
+            writeUraToRap();
         }
     }
 
@@ -131,4 +139,54 @@ void RapPacker::setUraDescriptor(UraDescriptor &descriptor) {
     setVersion(descriptor.uraVersion, "1.0");
     setDate(descriptor.uraDate, 15, 1, 22);
     setProducerId(descriptor.uraProducerId, 1);
+}
+
+void RapPacker::setPaddingBit(PaddingBit &bit, size_t currentComponentNumber, size_t componentsNumber) {
+    if (currentComponentNumber == componentsNumber - 1) {
+        bit.paddingBit = 0;
+    } else {
+        bit.paddingBit = 1;
+    }
+}
+
+void RapPacker::setUraComponentHeader(UraComponentHeader &header) {
+    setId(header.uraComponentId, "156R2n");
+    header.uraComponentCodeType = 0;
+    header.HwComponentId = 123;
+}
+
+void RapPacker::writeUraToRap() {
+    uint64_t uraSize = getUraSize();
+    rap.write((char *) &uraSize, sizeof(uraSize));
+
+    std::ifstream ura("../ura/URA", std::ios_base::in | std::ios_base::binary);
+
+    if (ura.is_open()) {
+        char byte;
+
+        while (ura.get(byte)) {
+            rap.write((char *) &byte, sizeof(byte));
+        }
+    }
+
+    ura.close();
+}
+
+uint64_t RapPacker::getUraSize() {
+    uint64_t uraSize = 0;
+
+    std::ifstream ura("../ura/URA", std::ios_base::in | std::ios_base::binary);
+
+    if (ura.is_open()) {
+        char byte;
+
+        while (ura.get(byte)) {
+            uraSize++;
+        }
+
+        ura.close();
+        return uraSize;
+    }
+
+    return 0;
 }

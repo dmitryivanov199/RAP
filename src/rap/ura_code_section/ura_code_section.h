@@ -16,7 +16,7 @@ struct UraDescriptor {
 struct UraComponentHeader {
     std::array<unsigned char, 8> uraComponentId;
     uint8_t uraComponentCodeType;
-    uint8_t HwComponentID;
+    uint8_t HwComponentId;
 };
 
 #endif //RAP_URA_CODE_SECTION_H

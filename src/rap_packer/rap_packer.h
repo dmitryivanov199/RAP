@@ -4,6 +4,7 @@
 #include <fstream>
 
 #include "../rap/header/header.h"
+#include "../rap/padding_bit.h"
 #include "../rap/ura_code_section/ura_code_section.h"
 
 class RapPacker {
@@ -41,6 +42,14 @@ private:
     void formUraCodeSection();
 
     static void setUraDescriptor(UraDescriptor &descriptor);
+
+    static void setPaddingBit(PaddingBit &bit, size_t currentComponentNumber, size_t componentsNumber);
+
+    static void setUraComponentHeader(UraComponentHeader &header);
+
+    void writeUraToRap();
+
+    static uint64_t getUraSize();
 };
 
 #endif //RAP_RAP_PACKER_H
