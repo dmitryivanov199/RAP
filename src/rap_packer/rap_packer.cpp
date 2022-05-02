@@ -117,22 +117,34 @@ void RapPacker::formUraCodeSection() {
     pack.write((char *) &uraDescriptor, sizeof(uraDescriptor));
 
     PaddingBit paddingBit{};
-    paddingBit.paddingBit = 0;
+    paddingBit.paddingBit = 1;
     pack.write((char *) &paddingBit, sizeof(paddingBit));
 
     UraComponentHeader header{};
-    setUraComponentHeader(header);
+    setUraComponentHeader(header, "recv");
     pack.write((char *) &header, sizeof(header));
 
-    writeUraToRap();
+    writeUraToRap("../ura/RRS_Receiver/RRS_Receiver");
+
+    paddingBit.paddingBit = 0;
+    pack.write((char *) &paddingBit, sizeof(paddingBit));
+
+    setUraComponentHeader(header, "send");
+    pack.write((char *) &header, sizeof(header));
+
+    writeUraToRap("../ura/RRS_Transmitter/RRS_Transmitter");
 
     pack.close();
 }
 
 uint64_t RapPacker::calculateCodeSectionSize() {
-    uint64_t codeSectionSize{sizeof(UraDescriptor) + sizeof(UraComponentHeader) + sizeof(PaddingBit)};
+    uint64_t codeSectionSize{sizeof(UraDescriptor) + sizeof(UraComponentHeader) * 2 + sizeof(PaddingBit) * 2};
+
     codeSectionSize += sizeof(uint64_t);
-    codeSectionSize += getUraSize();
+    codeSectionSize += getUraSize("../ura/RRS_Receiver/RRS_Receiver");
+
+    codeSectionSize += sizeof(uint64_t);
+    codeSectionSize += getUraSize("../ura/RRS_Transmitter/RRS_Transmitter");
 
     return codeSectionSize;
 }
@@ -144,17 +156,17 @@ void RapPacker::setUraDescriptor(UraDescriptor &descriptor) {
     setProducerId(descriptor.appProducerId, 1);
 }
 
-void RapPacker::setUraComponentHeader(UraComponentHeader &header) {
-    setId(header.appComponentId, "156R2n");
+void RapPacker::setUraComponentHeader(UraComponentHeader &header, const char *componentId) {
+    setId(header.appComponentId, componentId);
     header.appComponentCodeType = 0;
     header.HwComponentId = 123;
 }
 
-void RapPacker::writeUraToRap() {
-    uint64_t uraSize = getUraSize();
+void RapPacker::writeUraToRap(const char *appName) {
+    uint64_t uraSize = getUraSize(nullptr);
     pack.write((char *) &uraSize, sizeof(uraSize));
 
-    std::ifstream ura("../ura/URA", std::ios_base::in | std::ios_base::binary);
+    std::ifstream ura(appName, std::ios_base::in | std::ios_base::binary);
 
     if (ura.is_open()) {
         char byte;
@@ -167,10 +179,10 @@ void RapPacker::writeUraToRap() {
     ura.close();
 }
 
-uint64_t RapPacker::getUraSize() {
+uint64_t RapPacker::getUraSize(const char *appName) {
     uint64_t uraSize = 0;
 
-    std::ifstream ura("../ura/URA", std::ios_base::in | std::ios_base::binary);
+    std::ifstream ura(appName, std::ios_base::in | std::ios_base::binary);
 
     if (ura.is_open()) {
         char byte;

@@ -45,11 +45,11 @@ private:
 
     static void setUraDescriptor(UraDescriptor &descriptor);
 
-    static void setUraComponentHeader(UraComponentHeader &header);
+    static void setUraComponentHeader(UraComponentHeader &header, const char *componentId);
 
-    void writeUraToRap();
+    void writeUraToRap(const char *appName);
 
-    static uint64_t getUraSize();
+    static uint64_t getUraSize(const char *appName);
 };
 
 #endif //RAP_RAP_PACKER_H
