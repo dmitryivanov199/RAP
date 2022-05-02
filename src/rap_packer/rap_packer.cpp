@@ -100,12 +100,12 @@ void RapPacker::setRapStructureDescriptor(RapHeader &header) {
 
 void RapPacker::setRadioLibDescriptor(RapHeader &header) {
     setVersion(header.radioLibDescriptor.radioLibVersion, "1.0");
-    setDate(header.radioLibDescriptor.radioLibDate, 15, 1, 22);
+    setDate(header.radioLibDescriptor.radioLibDate, 1, 1, 22);
 }
 
 void RapPacker::setTargetPlatformDescriptor(RapHeader &header) {
     header.targetPlatformDescriptor.targetPlatformId = 45;
-    header.targetPlatformDescriptor.reconfigurationClass = 1;
+    header.targetPlatformDescriptor.reconfigurationClass = 2;
 }
 
 void RapPacker::formUraCodeSection() {
@@ -140,7 +140,7 @@ uint64_t RapPacker::calculateCodeSectionSize() {
 void RapPacker::setUraDescriptor(UraDescriptor &descriptor) {
     setId(descriptor.appId, "URA1");
     setVersion(descriptor.appVersion, "1.0");
-    setDate(descriptor.appDate, 15, 1, 22);
+    setDate(descriptor.appDate, 1, 1, 22);
     setProducerId(descriptor.appProducerId, 1);
 }
 
