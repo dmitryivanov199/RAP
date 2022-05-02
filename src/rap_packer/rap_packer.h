@@ -21,7 +21,7 @@ public:
 private:
     void formHeader();
 
-    static void setRapDescriptor(RAPHeader &header);
+    static void setRapDescriptor(RapHeader &header);
 
     static bool setId(std::array<unsigned char, 8> &id, const char *setId);
 
@@ -33,19 +33,19 @@ private:
 
     static void getRapFileName(std::array<unsigned char, 8> rapId, char *fileName);
 
-    static void setRapStructureDescriptor(RAPHeader &header);
+    static void setRapStructureDescriptor(RapHeader &header);
 
-    static void setRadioLibDescriptor(RAPHeader &header);
+    static void setRadioLibDescriptor(RapHeader &header);
 
-    static void setTargetPlatformDescriptor(RAPHeader &header);
+    static void setTargetPlatformDescriptor(RapHeader &header);
 
     void formUraCodeSection();
 
     static uint64_t calculateCodeSectionSize();
 
-    static void setUraDescriptor(URADescriptor &descriptor);
+    static void setUraDescriptor(UraDescriptor &descriptor);
 
-    static void setUraComponentHeader(URAComponentHeader &header);
+    static void setUraComponentHeader(UraComponentHeader &header);
 
     void writeUraToRap();
 

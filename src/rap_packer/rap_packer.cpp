@@ -8,11 +8,11 @@ void RapPacker::formRap() {
 }
 
 void RapPacker::formHeader() {
-    RAPHeader header{};
+    RapHeader header{};
     setRapDescriptor(header);
 
     char fileName[20];
-    getRapFileName(header.packDescriptor.packID, fileName);
+    getRapFileName(header.packDescriptor.packId, fileName);
     pack.open(fileName, std::ios_base::binary | std::ios_base::trunc | std::ios_base::out);
 
     setRapStructureDescriptor(header);
@@ -22,11 +22,11 @@ void RapPacker::formHeader() {
     pack.write((char *) &header, sizeof(header));
 }
 
-void RapPacker::setRapDescriptor(RAPHeader &header) {
-    setId(header.packDescriptor.packID, "RAP1");
+void RapPacker::setRapDescriptor(RapHeader &header) {
+    setId(header.packDescriptor.packId, "RAP1");
     setVersion(header.packDescriptor.packVersion, "1.0");
     setDate(header.packDescriptor.packDate, 15, 1, 22);
-    setProducerId(header.packDescriptor.packProducerID, 126);
+    setProducerId(header.packDescriptor.packProducerId, 126);
 }
 
 bool RapPacker::setId(std::array<unsigned char, 8> &id, const char *setId) {
@@ -88,7 +88,7 @@ void RapPacker::getRapFileName(std::array<unsigned char, 8> rapId, char *fileNam
     strcat(fileName, ".bin");
 }
 
-void RapPacker::setRapStructureDescriptor(RAPHeader &header) {
+void RapPacker::setRapStructureDescriptor(RapHeader &header) {
     header.packStructureDescriptor.manufacturerInfoFlag = 0;
     header.packStructureDescriptor.initialProfileFlag = 0;
     header.packStructureDescriptor.rapReserveFlag = 0;
@@ -98,13 +98,13 @@ void RapPacker::setRapStructureDescriptor(RAPHeader &header) {
     header.packStructureDescriptor.reserveFlags = 0;
 }
 
-void RapPacker::setRadioLibDescriptor(RAPHeader &header) {
+void RapPacker::setRadioLibDescriptor(RapHeader &header) {
     setVersion(header.radioLibDescriptor.radioLibVersion, "1.0");
     setDate(header.radioLibDescriptor.radioLibDate, 15, 1, 22);
 }
 
-void RapPacker::setTargetPlatformDescriptor(RAPHeader &header) {
-    header.targetPlatformDescriptor.targetPlatformID = 45;
+void RapPacker::setTargetPlatformDescriptor(RapHeader &header) {
+    header.targetPlatformDescriptor.targetPlatformId = 45;
     header.targetPlatformDescriptor.reconfigurationClass = 1;
 }
 
@@ -112,7 +112,7 @@ void RapPacker::formUraCodeSection() {
     uint64_t codeSectionSize = calculateCodeSectionSize();
     pack.write((char *) &codeSectionSize, sizeof(codeSectionSize));
 
-    URADescriptor uraDescriptor{};
+    UraDescriptor uraDescriptor{};
     setUraDescriptor(uraDescriptor);
     pack.write((char *) &uraDescriptor, sizeof(uraDescriptor));
 
@@ -120,7 +120,7 @@ void RapPacker::formUraCodeSection() {
     paddingBit.paddingBit = 0;
     pack.write((char *) &paddingBit, sizeof(paddingBit));
 
-    URAComponentHeader header{};
+    UraComponentHeader header{};
     setUraComponentHeader(header);
     pack.write((char *) &header, sizeof(header));
 
@@ -130,24 +130,24 @@ void RapPacker::formUraCodeSection() {
 }
 
 uint64_t RapPacker::calculateCodeSectionSize() {
-    uint64_t codeSectionSize{sizeof(URADescriptor) + sizeof(URAComponentHeader) + sizeof(PaddingBit)};
+    uint64_t codeSectionSize{sizeof(UraDescriptor) + sizeof(UraComponentHeader) + sizeof(PaddingBit)};
     codeSectionSize += sizeof(uint64_t);
     codeSectionSize += getUraSize();
 
     return codeSectionSize;
 }
 
-void RapPacker::setUraDescriptor(URADescriptor &descriptor) {
-    setId(descriptor.appID, "URA1");
+void RapPacker::setUraDescriptor(UraDescriptor &descriptor) {
+    setId(descriptor.appId, "URA1");
     setVersion(descriptor.appVersion, "1.0");
     setDate(descriptor.appDate, 15, 1, 22);
-    setProducerId(descriptor.appProducerID, 1);
+    setProducerId(descriptor.appProducerId, 1);
 }
 
-void RapPacker::setUraComponentHeader(URAComponentHeader &header) {
-    setId(header.appComponentID, "156R2n");
+void RapPacker::setUraComponentHeader(UraComponentHeader &header) {
+    setId(header.appComponentId, "156R2n");
     header.appComponentCodeType = 0;
-    header.HWComponentID = 123;
+    header.HwComponentId = 123;
 }
 
 void RapPacker::writeUraToRap() {
