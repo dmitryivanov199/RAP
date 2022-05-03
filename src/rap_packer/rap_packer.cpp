@@ -163,7 +163,7 @@ void RapPacker::setUraComponentHeader(UraComponentHeader &header, const char *co
 }
 
 void RapPacker::writeUraToRap(const char *appName) {
-    uint64_t uraSize = getUraSize(nullptr);
+    uint64_t uraSize = getUraSize(appName);
     pack.write((char *) &uraSize, sizeof(uraSize));
 
     std::ifstream ura(appName, std::ios_base::in | std::ios_base::binary);
